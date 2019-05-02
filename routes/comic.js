@@ -71,7 +71,7 @@ app.put('/:id', (req, res) => {
         }
 
 
-        comic.titulo = body.nombre;
+        comic.titulo = body.titulo;
         comic.precio = body.precio;
         comic.enStock = body.enStock;
         comic.vendido = body.vendido;
@@ -106,15 +106,15 @@ app.post('/', (req, res) => {
 
     var body = req.body;
 
-    var Comic = new Comic({
-        titulo: body.nombre,
+    var comic = new Comic({
+        titulo: body.titulo,
         descripcion: body.descripcion,
         precio: body.precio,
         enStock: body.enStock,
         vendido: body.vendido
     });
 
-    Comic.save((err, comicGuardado) => {
+    comic.save((err, comicGuardado) => {
 
         if (err) {
             return res.status(400).json({
