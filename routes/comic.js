@@ -41,6 +41,81 @@ app.get('/', (req, res, next) => {
 
             });
 });
+// ==========================================
+// Obtener todos los Comics Vendidos
+// ==========================================
+app.get('/vendidos', (req, res, next) => {
+
+    var desde = req.query.desde || 0;
+    desde = Number(desde);
+
+    Comic.find({ vendido: true }, 'titulo precio enStock')
+        .skip(desde)
+        .limit(5)
+        .exec(
+            (err, comics) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error cargando comic',
+                        errors: err
+                    });
+                }
+
+                Comic.count({vendido: true }, (err, conteo) => {
+
+                    res.status(200).json({
+                        ok: true,
+                        comics: comics,
+                        total: conteo
+                    });
+
+                })
+
+
+
+
+            });
+});
+
+// ==========================================
+// Obtener todos los Comics en Stock
+// ==========================================
+app.get('/stock', (req, res, next) => {
+
+    var desde = req.query.desde || 0;
+    desde = Number(desde);
+
+    Comic.find({ enStock:true }, 'titulo  descripcion precio')
+        .skip(desde)
+        .limit(5)
+        .exec(
+            (err, comics) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error cargando comic',
+                        errors: err
+                    });
+                }
+
+                Comic.count({ enStock:true }, (err, conteo) => {
+
+                    res.status(200).json({
+                        ok: true,
+                        comics: comics,
+                        total: conteo
+                    });
+
+                })
+
+
+
+
+            });
+});
 
 
 // ==========================================
