@@ -46,7 +46,7 @@ app.get('/vendidos', (req, res, next) => {
     var cantidadStock = req.query.cantidadStock;
     desde = Number(desde);
 
-    Comic.find({ vendido: true , cantidadStock:{$gte: 0}}, 'titulo precio enStock cantidadStock')
+    Comic.find({ vendido: true , cantidadStock:{$gte: 0} }, 'titulo precio enStock cantidadStock')
         .skip(desde)
         .limit(5)
         .exec(
@@ -88,7 +88,7 @@ app.get('/stock', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Comic.find({ enStock:true }, 'titulo  descripcion precio cantidadStock')
+    Comic.find({ enStock:true , cantidadStock: {$gte: 0} }, 'titulo  descripcion precio cantidadStock')
         .skip(desde)
         .limit(5)
         .exec(
@@ -109,7 +109,7 @@ app.get('/stock', (req, res, next) => {
                     });
                 }
 
-                Comic.count({ enStock:true }, (err, conteo) => {
+                Comic.count({ enStock:true , cantidadStock: {$gte: 0} }, (err, conteo) => {
 
                     res.status(200).json({
                         ok: true,
