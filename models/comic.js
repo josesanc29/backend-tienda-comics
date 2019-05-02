@@ -8,7 +8,9 @@ var comicSchema = new Schema({
     descripcion: { type: String },
     precio: { type: Number , required:[ true , 'El campo precio es obligatorio']},
     enStock:{ type: Boolean, default:true , required:[ true , 'El campo enStock es obligatorio']},
-    vendido:{ type: Boolean, default:false, required:[ true , 'El campo vendido es obligatorio']}
+    vendido:{ type: Boolean, default:false, required:[ true , 'El campo vendido es obligatorio']},
+    compra1:{ type: Boolean , default: false },
+    cantidadStock: { type: Number , required:[ true , 'El campo cantidad se debe especificar']}
 });
 
 

@@ -12,7 +12,7 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Comic.find({}, 'titulo descripcion precio enStock vendido')
+    Comic.find({}, 'titulo descripcion precio enStock vendido cantidadStock')
         .skip(desde)
         .limit(5)
         .exec(
@@ -35,10 +35,6 @@ app.get('/', (req, res, next) => {
                     });
 
                 })
-
-
-
-
             });
 });
 // ==========================================
@@ -47,9 +43,10 @@ app.get('/', (req, res, next) => {
 app.get('/vendidos', (req, res, next) => {
 
     var desde = req.query.desde || 0;
+    var cantidadStock = req.query.cantidadStock;
     desde = Number(desde);
 
-    Comic.find({ vendido: true }, 'titulo precio enStock')
+    Comic.find({ vendido: true , cantidadStock:{$gte: 0}}, 'titulo precio enStock cantidadStock')
         .skip(desde)
         .limit(5)
         .exec(
@@ -62,8 +59,15 @@ app.get('/vendidos', (req, res, next) => {
                         errors: err
                     });
                 }
+                if (comics.cantidadStock > 100 || comics.cantidadStock < 0) {
+                    return res.status(405).json({
+                        ok: false,
+                        mensaje: 'Error la cantidad de Stock no puede ser mayor de 100 o menor de 0',
+                        errors: err
+                    });
+                }
 
-                Comic.count({vendido: true }, (err, conteo) => {
+                Comic.count({vendido: true , cantidadStock: {$gte: 0}}, (err, conteo) => {
 
                     res.status(200).json({
                         ok: true,
@@ -72,9 +76,6 @@ app.get('/vendidos', (req, res, next) => {
                     });
 
                 })
-
-
-
 
             });
 });
@@ -87,7 +88,7 @@ app.get('/stock', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Comic.find({ enStock:true }, 'titulo  descripcion precio')
+    Comic.find({ enStock:true }, 'titulo  descripcion precio cantidadStock')
         .skip(desde)
         .limit(5)
         .exec(
@@ -97,6 +98,13 @@ app.get('/stock', (req, res, next) => {
                     return res.status(500).json({
                         ok: false,
                         mensaje: 'Error cargando comic',
+                        errors: err
+                    });
+                }
+                if (comics.cantidadStock > 100 || comics.cantidadStock < 0) {
+                    return res.status(405).json({
+                        ok: false,
+                        mensaje: 'Error la cantidad de Stock no puede ser mayor de 100 o menor de 0',
                         errors: err
                     });
                 }
@@ -110,10 +118,6 @@ app.get('/stock', (req, res, next) => {
                     });
 
                 })
-
-
-
-
             });
 });
 
@@ -147,9 +151,9 @@ app.put('/:id', (req, res) => {
 
 
         comic.titulo = body.titulo;
+        comic.descripcion = body.descripcion;
         comic.precio = body.precio;
-        comic.enStock = body.enStock;
-        comic.vendido = body.vendido;
+
 
         comic.save((err, comicGuardado) => {
 
@@ -186,7 +190,8 @@ app.post('/', (req, res) => {
         descripcion: body.descripcion,
         precio: body.precio,
         enStock: body.enStock,
-        vendido: body.vendido
+        vendido: body.vendido,
+        cantidadStock : body.cantidadStock,
     });
 
     comic.save((err, comicGuardado) => {
@@ -203,8 +208,6 @@ app.post('/', (req, res) => {
             ok: true,
             comic: comicGuardado,
         });
-
-
     });
 
 });
