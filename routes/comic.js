@@ -13,6 +13,8 @@ app.get('/', (req, res, next) => {
     desde = Number(desde);
 
     Comic.find({}, 'titulo descripcion precio enStock vendido cantidadStock')
+        .populate('Cliente' , 'nombre email comicsComprados')
+        .populate('Tienda' , 'nombreTienda email')
         .skip(desde)
         .limit(5)
         .exec(
