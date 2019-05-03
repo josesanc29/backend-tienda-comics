@@ -10,8 +10,8 @@ var comicSchema = new Schema({
     vendido:{ type: Boolean, default:false, required:[ true , 'El vendido es obligatorio']},
     compra1:{ type: Boolean , default: false },
     cantidadStock: { type: Number , min:0 , max:100 ,required:[ true , 'El cantidad se debe especificar']},
-    cliente: {type: Schema.Types.ObjectId , ref: 'Cliente', required: [true , 'El cliente es obligatorio']}, 
-    tienda: {type: Schema.Types.ObjectId , ref: 'Tienda' , required:[ true , 'La tienda es obligatoria']}
+    cliente: {type: Schema.Types.ObjectId , ref: 'Cliente'}, 
+    tienda: {type: Schema.Types.ObjectId , ref: 'Tienda'}
 });
 
 

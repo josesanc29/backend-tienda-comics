@@ -195,6 +195,8 @@ app.post('/', (req, res) => {
         enStock: body.enStock,
         vendido: body.vendido,
         cantidadStock : body.cantidadStock,
+        cliente: body.cliente,
+        tienda: body.tienda
     });
 
     comic.save((err, comicGuardado) => {
