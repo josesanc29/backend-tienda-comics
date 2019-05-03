@@ -92,6 +92,7 @@ app.get('/stock', (req, res, next) => {
 
     Comic.find({ enStock:true , cantidadStock: {$gte: 0} }, 'titulo  descripcion precio cantidadStock')
         .skip(desde)
+        .populate('Tienda')
         .limit(5)
         .exec(
             (err, comics) => {
