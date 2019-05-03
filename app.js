@@ -25,6 +25,8 @@ app.use(bodyParser.json())
 // Importar rutas
 var appRoutes = require('./routes/app');
 var comicRoutes = require('./routes/comic');
+var clienteRoutes = require('./routes/cliente');
+var tiendaRoutes = require('./routes/tienda');
 var busquedaRoutes = require('./routes/busqueda');
 
 
@@ -47,8 +49,9 @@ mongoose.connection.openUri('mongodb://localhost:27017/comicStoreDB', (err, res)
 
 // Rutas
 app.use('/comic', comicRoutes);
+app.use('/cliente', clienteRoutes);
+app.use('/tienda' , tiendaRoutes);
 app.use('/busqueda', busquedaRoutes);
-
 app.use('/', appRoutes);
 
 

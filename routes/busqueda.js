@@ -2,6 +2,8 @@ var express = require('express');
 
 var app = express();
 var Comic = require('../models/comic');
+var Cliente = require('../models/cliente');
+var Tienda = require('../models/tienda');
 
 // ==============================
 // Busqueda por colección
@@ -19,7 +21,12 @@ app.get('/coleccion/:tabla/:busqueda', (req, res) => {
         case 'comics':
             promesa = buscarComics(busqueda, regex);
             break;
-
+        case 'clientes':
+            promesa = buscarClientes(busqueda , regex);
+            break;
+        case 'tiendas': 
+            promesa = buscarTiendas(busqueda , regex);
+            break;
         default:
             return res.status(400).json({
                 ok: false,
@@ -51,13 +58,17 @@ app.get('/todo/:busqueda', (req, res, next) => {
 
 
     Promise.all([
-            buscarComics(busqueda, regex)
+            buscarComics(busqueda, regex),
+            buscarClientes(busqueda , regex),
+            buscarTiendas(busqueda , regex)
         ])
         .then(respuestas => {
 
             res.status(200).json({
                 ok: true,
-                comics: respuestas[0]
+                comics: respuestas[0],
+                clientes: respuestas[1],
+                tiendas: respuestas[2]
             });
         })
 
@@ -85,6 +96,47 @@ function buscarComics(busqueda, regex) {
     });
 }
 
+function buscarClientes(busqueda, regex) {
+
+    return new Promise((resolve, reject) => {
+
+        Cliente.find({}, 'titulo precio enStock vendido')
+            .or([{ 'titulo': regex }, { 'precio': regex }])
+            .exec((err, clientes) => {
+
+                if (err) {
+                    reject('Erro al cargar clientes', err);
+                } else {
+                    resolve(clientes);
+                }
+
+
+            })
+
+
+    });
+}
+
+function buscarTiendas(busqueda, regex) {
+
+    return new Promise((resolve, reject) => {
+
+        Tienda.find({}, 'titulo precio enStock vendido')
+            .or([{ 'titulo': regex }, { 'precio': regex }])
+            .exec((err, tiendas) => {
+
+                if (err) {
+                    reject('Erro al cargar tiendas', err);
+                } else {
+                    resolve(tiendas);
+                }
+
+
+            })
+
+
+    });
+}
 
 
 module.exports = app;
