@@ -9,8 +9,9 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Cliente.find({}, 'nombre telefono email comicsComprados')
-        .populate('Comics' , 'titulo descripcion precio')
+    Cliente.find({}, 'nombre telefono email tienda comic')
+        .populate('comic' , 'titulo descripcion precio')
+        .populate('tienda', 'nombreTienda email')
         .skip(desde)
         .limit(5)
         .exec(
@@ -31,7 +32,7 @@ app.get('/', (req, res, next) => {
                         clientes: clientes,
                         total: conteo
                     });
-
+                    console.log(res)
                 })
             });
 });
@@ -83,11 +84,7 @@ app.post('/', (req, res) => {
     var cliente = new Cliente({
         nombre: body.nombre,
         telefono: body.telefono,
-        email: body.email,
-        comicsComprados:[{
-            comicId : body.comicId
-        }] 
-        
+        email: body.email
     });
 
     cliente.save((err, clienteGuardado) => {

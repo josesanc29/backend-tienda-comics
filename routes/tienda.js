@@ -10,8 +10,7 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Tienda.find({}, 'nombreTienda email location comics')
-        .populate('Comics' , 'titulo descripcion enStock')
+    Tienda.find({}, 'nombreTienda email longitud latitud')
         .skip(desde)
         .limit(5)
         .exec(
@@ -46,7 +45,6 @@ app.get('/:id', (req, res) => {
     var id = req.params.id;
 
     Tienda.findById(id)
-        .populate('Comics', 'titulo descripcion enStock')
         .exec((err, tienda) => {
 
             if (err) {
@@ -85,11 +83,8 @@ app.post('/', (req, res) => {
     var tienda = new Tienda({
         nombreTienda: body.nombreTienda,
         email: body.email,
-        location:[body.location.long , body.location.lat],
-        comicsComprados:[{
-            comicId : body.comicId
-        }] 
-        
+        longitud: body.longitud,
+        latitud: body.latitud
     });
 
     tienda.save((err, tiendaGuardado) => {
